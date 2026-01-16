@@ -22,7 +22,7 @@ export function TextEffect({
   speedSegment = 0.05,
   delay = 0,
 }: TextEffectProps) {
-  const words = children.split(" ")
+  const words = React.useMemo(() => children.split(" "), [children])
 
   const container: Variants = {
     hidden: { opacity: 0 },
