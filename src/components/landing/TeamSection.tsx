@@ -182,7 +182,7 @@ const TeamMemberCard = memo(function TeamMemberCard({
     >
       {/* Image Container with Optimized Animations */}
       <motion.div
-        className="relative aspect-[2/3] w-full overflow-hidden"
+        className="relative aspect-2/3 w-full overflow-hidden"
         variants={imageHoverVariants}
       >
         <Image
