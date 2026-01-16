@@ -2,8 +2,10 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { DURATIONS, EASING_CURVES, SPRING_CONFIGS } from "../animation-config";
 import type { NavLink, NavSection, TopNavItem } from "../data";
 
@@ -123,6 +125,19 @@ function PromoCard({
   cta = "Learn More",
   prefersReducedMotion,
 }: PromoCardProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line
+    setMounted(true);
+  }, []);
+
+  const promoImage =
+    mounted && resolvedTheme === "dark"
+      ? "/images/promo-card-dark.png"
+      : "/images/promo-card-light.png";
+
   return (
     <motion.div
       initial={prefersReducedMotion ? {} : { opacity: 0, scale: 0.95 }}
@@ -148,17 +163,10 @@ function PromoCard({
           <div className="relative -mx-4 h-4/5 px-4 pt-6 before:absolute before:inset-x-6 before:bottom-0 before:top-4 before:z-1 before:rounded-t-xl before:border before:border-transparent before:bg-background before:shadow-sm before:ring-1 before:ring-nav-border after:absolute after:inset-x-9 after:bottom-0 after:top-2 after:rounded-t-xl after:border after:border-transparent after:bg-background/75 after:ring-1 after:ring-nav-border/50 mask-[linear-gradient(to_bottom,black_35%,transparent)]">
             <div className="relative z-10 h-full overflow-hidden rounded-t-xl border border-transparent bg-card p-8 text-sm shadow-xl shadow-black/25 ring-1 ring-nav-border">
               <Image
-                src="/images/promo-card-light.png"
+                src={promoImage}
                 alt={title}
                 fill
-                className="block object-cover dark:hidden"
-                sizes="(max-width: 768px) 100vw, 400px"
-              />
-              <Image
-                src="/images/promo-card-dark.png"
-                alt={title}
-                fill
-                className="hidden object-cover dark:block"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw, 400px"
               />
             </div>

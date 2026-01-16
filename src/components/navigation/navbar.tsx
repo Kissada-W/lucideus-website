@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
+import dynamic from "next/dynamic";
 import { DURATIONS, EASING_CURVES, SPRING_CONFIGS } from "./animation-config";
 import { MobileToggle } from "./atoms/MobileToggle";
 import { NavContainer } from "./atoms/NavContainer";
@@ -13,9 +14,13 @@ import { NavSection, TopNavItem, topNav } from "./data";
 import { DesktopNav } from "./desktop/DesktopNav";
 import { useNavState } from "./hooks/useNavState";
 import { MegaMenu } from "./desktop/MegaMenu";
-import { MobileNav } from "./mobile/MobileNav";
 import { useReducedMotion } from "./use-reduced-motion";
 import { AnimatedThemeToggler } from "../common/animated-theme-toggler";
+
+const MobileNav = dynamic(
+  () => import("./mobile/MobileNav").then((mod) => mod.MobileNav),
+  { ssr: false }
+);
 
 /* -------------------------------------------------------------------------- */
 /*                                Main Navbar                                 */
@@ -44,13 +49,21 @@ export function Navbar({
   const [megaTop, setMegaTop] = React.useState(80); // sensible default
 
   React.useEffect(() => {
-    const compute = () => {
-      if (!barRef.current) return;
-      setMegaTop(barRef.current.offsetHeight + 8); // small offset like Tailark
-    };
-    compute();
-    window.addEventListener("resize", compute);
-    return () => window.removeEventListener("resize", compute);
+    if (!barRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.borderBoxSize) {
+          setMegaTop(entry.borderBoxSize[0].blockSize + 8);
+        } else {
+          // Fallback for older browsers
+          setMegaTop(entry.target.getBoundingClientRect().height + 8);
+        }
+      }
+    });
+
+    resizeObserver.observe(barRef.current);
+    return () => resizeObserver.disconnect();
   }, []);
 
   const openMegaItem = React.useMemo(
