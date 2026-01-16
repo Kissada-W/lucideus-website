@@ -69,6 +69,11 @@
   --shadow-opacity: var(--shadow-opacity);
   --color-shadow-color: var(--shadow-color);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-nav-bg: var(--nav-bg);
+  --color-nav-text: var(--nav-text);
+  --color-nav-border: var(--nav-border);
+  --color-nav-hover-bg: var(--nav-hover-bg);
+  --color-nav-hover-text: var(--nav-hover-text);
 }
 
 :root {
@@ -105,6 +110,11 @@
   --sidebar-border: oklch(0.9296 0.0052 247.8799);
   --sidebar-ring: oklch(0.5519 0.1570 37.8418);
   --destructive-foreground: oklch(0.9791 0 0);
+  --nav-bg: oklch(0.9911 0 0);
+  --nav-text: oklch(0.2786 0.0211 257.2774);
+  --nav-border: oklch(0.9055 0.0063 255.4777);
+  --nav-hover-bg: oklch(0.6204 0.1204 37.6621);
+  --nav-hover-text: oklch(0.2492 0.0200 254.8597);
   --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: serif;
   --font-mono: JetBrains Mono, ui-monospace, monospace;
@@ -160,6 +170,11 @@
   --sidebar-border: oklch(0.2520 0 0);
   --sidebar-ring: oklch(0.6891 0.1488 37.9079);
   --destructive-foreground: oklch(0.9491 0 0);
+  --nav-bg: oklch(0.1697 0.0105 276.3187);
+  --nav-text: oklch(0.9107 0.0098 252.8160);
+  --nav-border: oklch(0.3015 0.0151 269.1828);
+  --nav-hover-bg: oklch(0.4010 0.0803 38.4674);
+  --nav-hover-text: oklch(0.9189 0 0);
   --radius: 0.75rem;
   --font-sans: Geist Mono, ui-monospace, monospace;
   --font-serif: serif;
