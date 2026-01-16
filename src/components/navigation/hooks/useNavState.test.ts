@@ -10,7 +10,7 @@ vi.mock('next/navigation', () => ({
 describe('useNavState', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (navigation.usePathname as any).mockReturnValue('/');
+    vi.mocked(navigation.usePathname).mockReturnValue('/');
   });
 
   it('initializes with closed states', () => {
@@ -46,7 +46,7 @@ describe('useNavState', () => {
     expect(result.current.mobileOpen).toBe(true);
 
     // Change pathname
-    (navigation.usePathname as any).mockReturnValue('/new-path');
+    vi.mocked(navigation.usePathname).mockReturnValue('/new-path');
     rerender();
 
     expect(result.current.mobileOpen).toBe(false);

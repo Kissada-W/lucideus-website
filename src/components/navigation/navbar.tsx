@@ -28,7 +28,13 @@ function isMegaItem(
   return "sections" in item;
 }
 
-export function Navbar({ className }: { className?: string }) {
+export function Navbar({ 
+  className,
+  items = topNav 
+}: { 
+  className?: string;
+  items?: TopNavItem[];
+}) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const { openMegaId, setOpenMegaId, mobileOpen, setMobileOpen } = useNavState();
@@ -49,10 +55,10 @@ export function Navbar({ className }: { className?: string }) {
 
   const openMegaItem = React.useMemo(
     () =>
-      topNav.find((i) => isMegaItem(i) && i.id === openMegaId) as
+      items.find((i) => isMegaItem(i) && i.id === openMegaId) as
         | Extract<TopNavItem, { sections: NavSection[] }>
         | undefined,
-    [openMegaId]
+    [items, openMegaId]
   );
 
   return (
@@ -73,7 +79,7 @@ export function Navbar({ className }: { className?: string }) {
 
         {/* Desktop nav - Centered */}
         <DesktopNav 
-          items={topNav} 
+          items={items} 
           pathname={pathname} 
           openMegaId={openMegaId} 
           setOpenMegaId={setOpenMegaId} 
@@ -157,7 +163,7 @@ export function Navbar({ className }: { className?: string }) {
 
       {/* Mobile menu: full-height sheet with sticky CTA, collapsible sections */}
       <MobileNav
-        items={topNav}
+        items={items}
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
         topOffset={megaTop}

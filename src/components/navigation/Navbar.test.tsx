@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({
 
 describe('Navbar', () => {
   it('renders the branding', () => {
-    (navigation.usePathname as any).mockReturnValue('/');
+    vi.mocked(navigation.usePathname).mockReturnValue('/');
     render(<Navbar />);
     expect(screen.getByText('Lucideus')).toBeInTheDocument();
   });

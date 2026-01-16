@@ -172,9 +172,25 @@ function PromoCard({
           <h3 className="text-sm font-medium text-nav-text transition-colors group-hover:text-nav-hover-text">
             {title}
           </h3>
-          <p className="line-clamp-1 text-xs text-nav-text/60 group-hover:text-nav-hover-text/60">
+          <p className="mb-2 line-clamp-1 text-xs text-nav-text/60 group-hover:text-nav-hover-text/60">
             {description}
           </p>
+          <div className="flex items-center gap-1 text-xs font-medium text-primary transition-colors group-hover:text-primary/80">
+            {cta}
+            <svg
+              className="size-3 transition-transform group-hover:translate-x-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </div>
         </div>
       </Link>
     </motion.div>
