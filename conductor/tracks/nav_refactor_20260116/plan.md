@@ -1,7 +1,7 @@
 # Implementation Plan - Restructure and Polish Navigation Components
 
 ## Phase 1: Foundation & Design System Setup
-- [ ] Task: Audit and Refactor `globals.css`
+- [x] Task: Audit and Refactor `globals.css` [94c5a30]
     - [ ] Update `src/app/globals.css` to define semantic color tokens (e.g., `--nav-bg`, `--nav-text`, `--nav-border`) based on existing Tailwind config.
     - [ ] Verify Tailwind v4 config picks up these variables correctly.
 - [ ] Task: Create Reusable Navigation Atoms
