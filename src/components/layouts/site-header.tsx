@@ -1,11 +1,11 @@
-import { MainNav } from "@/components/navigation/main-nav";
+import { Navbar } from "@/components/navigation/navbar";
 
 export function SiteHeader() {
   return (
     <header>
       <div>
         {/* DESKTOP NAVBAR */}
-        <MainNav />
+        <Navbar />
         {/* MOBILE NAVBAR */}
         <div>
         </div>
