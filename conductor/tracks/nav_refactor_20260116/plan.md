@@ -4,7 +4,7 @@
 - [x] Task: Audit and Refactor `globals.css` [94c5a30]
     - [ ] Update `src/app/globals.css` to define semantic color tokens (e.g., `--nav-bg`, `--nav-text`, `--nav-border`) based on existing Tailwind config.
     - [ ] Verify Tailwind v4 config picks up these variables correctly.
-- [ ] Task: Create Reusable Navigation Atoms
+- [x] Task: Create Reusable Navigation Atoms [a867dd9]
     - [ ] Create `src/components/navigation/atoms/NavContainer.tsx` with correct max-width and padding.
     - [ ] Create `src/components/navigation/atoms/NavLink.tsx` (unifying `SimpleLink`, `RichLink`, etc.) with strict spacing.
     - [ ] Create `src/components/navigation/atoms/NavTrigger.tsx` for mega menu triggers.
