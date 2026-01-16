@@ -83,7 +83,7 @@ export function HeroSection({
           <div className="h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.04)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)]" />
         </div>
         <section>
-          <div className="relative pt-section-sm md:pt-section-lg">
+          <div className="relative pt-24 md:pt-36">
             <AnimatedGroup
               variants={{
                 container: {
@@ -102,22 +102,21 @@ export function HeroSection({
                     opacity: 1,
                     y: 0,
                     transition: {
-                      type: "spring" as const,
+                      type: "spring",
                       bounce: 0.3,
                       duration: 2,
                     },
                   },
                 },
               }}
-              className="mask-b-from-35% mask-b-to-90% absolute inset-0 top-56 -z-20 lg:top-32"
+              className="mask-b-from-25% mask-b-to-85% absolute inset-0 top-56 -z-20 lg:top-32"
             >
               <Image
-                src="/images/hero-bg.jpg"
+                src={"/images/header-bg1.jpg"}
                 alt="background"
-                fill
-                className="hidden size-full object-cover dark:block"
-                sizes="100vw"
-                priority
+                className="hidden size-full dark:block inset-0 top-56 -z-20 mask-[linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)] lg:top-32"
+                width="3276"
+                height="4095"
               />
             </AnimatedGroup>
 
@@ -156,8 +155,7 @@ export function HeroSection({
                   preset="fade-in-blur"
                   speedSegment={0.3}
                   as="h1"
-                  className="mx-auto mt-8 max-w-4xl text-balance text-5xl font-semibold tracking-tight md:text-7xl lg:mt-16 xl:text-[5.5rem]"
-                >
+                  className="mx-auto mt-8 max-w-4xl text-balance text-5xl max-md:font-semibold md:text-7xl lg:mt-16 xl:text-[5.25rem] uppercase">
                   {title}
                 </TextEffect>
                 <TextEffect
@@ -250,34 +248,6 @@ export function HeroSection({
                 </div>
               </div>
             </AnimatedGroup>
-          </div>
-        </section>
-        <section className="bg-background pb-section-xs pt-section-xs md:pb-section-md">
-          <div className="group relative m-auto max-w-5xl px-6">
-            <div className="absolute inset-0 z-10 flex scale-95 items-center justify-center opacity-0 duration-500 group-hover:scale-100 group-hover:opacity-100">
-              <Link
-                href="/"
-                className="block text-sm duration-150 hover:opacity-75"
-              >
-                <span> Meet Our Customers</span>
-
-                <ChevronRight className="ml-1 inline-block size-3" />
-              </Link>
-            </div>
-            <div className="group-hover:blur-xs mx-auto mt-12 grid max-w-2xl grid-cols-4 gap-x-12 gap-y-8 transition-all duration-500 group-hover:opacity-50 sm:gap-x-16 sm:gap-y-14">
-              {CLIENTS.map((client) => (
-                <div key={client.name} className="flex">
-                  <Image
-                    className="mx-auto h-auto w-auto object-contain dark:invert"
-                    src={client.logo}
-                    alt={`${client.name} Logo`}
-                    width={client.width}
-                    height={client.height}
-                    sizes={`${client.width}px`}
-                  />
-                </div>
-              ))}
-            </div>
           </div>
         </section>
       </main>
