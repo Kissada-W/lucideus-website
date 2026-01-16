@@ -1,6 +1,6 @@
 # Implementation Plan - Restructure and Polish Navigation Components
 
-## Phase 1: Foundation & Design System Setup
+## Phase 1: Foundation & Design System Setup [checkpoint: 0f61ce5]
 - [x] Task: Audit and Refactor `globals.css` [94c5a30]
     - [ ] Update `src/app/globals.css` to define semantic color tokens (e.g., `--nav-bg`, `--nav-text`, `--nav-border`) based on existing Tailwind config.
     - [ ] Verify Tailwind v4 config picks up these variables correctly.
@@ -10,7 +10,7 @@
     - [ ] Create `src/components/navigation/atoms/NavTrigger.tsx` for mega menu triggers.
     - [ ] Create `src/components/navigation/atoms/MobileToggle.tsx`.
     - [ ] Ensure all atoms use the new semantic tokens and 4/8pt grid.
-- [ ] Task: Conductor - User Manual Verification 'Foundation & Design System Setup' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Foundation & Design System Setup' (Protocol in workflow.md) [0f61ce5]
 
 ## Phase 2: Core Desktop Navigation
 - [ ] Task: Refactor `Navbar.tsx` (Container)
