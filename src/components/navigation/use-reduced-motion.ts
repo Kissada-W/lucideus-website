@@ -1,20 +1,27 @@
-import { useEffect, useState } from "react";
+"use client"
 
-export function useReducedMotion(): boolean {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+import * as React from "react"
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPrefersReducedMotion(mediaQuery.matches);
+/**
+ * Hook to detect if user prefers reduced motion
+ * Respects system accessibility settings
+ *
+ * @returns {boolean} True if user prefers reduced motion
+ */
+export function useReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false)
 
-    const handler = (event: MediaQueryListEvent) => {
-      setPrefersReducedMotion(event.matches);
-    };
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+    setPrefersReducedMotion(mediaQuery.matches)
 
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches)
+    }
 
-  return prefersReducedMotion;
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
+  }, [])
+
+  return prefersReducedMotion
 }

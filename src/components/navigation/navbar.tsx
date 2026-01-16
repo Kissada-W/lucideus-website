@@ -1,9 +1,8 @@
 "use client";
 
-import { AnimatedThemeToggler } from "@/components/common/animated-theme-toggler";
-import { useReducedMotion } from "@/components/navigation/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,17 +11,14 @@ import { DURATIONS, EASING_CURVES, SPRING_CONFIGS } from "./animation-config";
 import { topNav, type NavSection, type TopNavItem } from "./data";
 import { DesktopMegaTrigger, DesktopSimpleLink } from "./desktop-nav";
 import { MegaPanel } from "./mega-panel";
-import {
-  MobileMegaItem,
-  MobileMenuButton,
-  MobileSimpleItem,
-} from "./mobile-nav";
+import { MobileMegaItem, MobileSimpleItem } from "./mobile-nav";
+import { useReducedMotion } from "./use-reduced-motion";
 
 /* -------------------------------------------------------------------------- */
 /*                                Main Navbar                                 */
 /* -------------------------------------------------------------------------- */
 
-type NavbarProps = { className?: string };
+type MainNavProps = { className?: string };
 
 /** Detect menu items that have sections (mega/rich menus). */
 function isMegaItem(
@@ -31,7 +27,7 @@ function isMegaItem(
   return "sections" in item;
 }
 
-export function Navbar({ className }: NavbarProps) {
+export function Navbar({ className }: MainNavProps) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
 
@@ -42,21 +38,21 @@ export function Navbar({ className }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [mobileOpenId, setMobileOpenId] = React.useState<string | null>(null);
 
-  // Measure nav height for mega panel positioning
+  // Measure nav height so the fixed mega panel sits exactly under it
   const barRef = React.useRef<HTMLDivElement | null>(null);
-  const [megaTop, setMegaTop] = React.useState(80);
+  const [megaTop, setMegaTop] = React.useState(80); // sensible default
 
   React.useEffect(() => {
     const compute = () => {
       if (!barRef.current) return;
-      setMegaTop(barRef.current.offsetHeight + 8);
+      setMegaTop(barRef.current.offsetHeight + 8); // small offset like Tailark
     };
     compute();
     window.addEventListener("resize", compute);
     return () => window.removeEventListener("resize", compute);
   }, []);
 
-  // Close menus on route change
+  // Close any open menus on route change
   React.useEffect(() => {
     setOpenMegaId(null);
     setMobileOpen(false);
@@ -74,29 +70,24 @@ export function Navbar({ className }: NavbarProps) {
   return (
     <header
       className={cn(
-        "sticky inset-x-0 top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl",
+        "sticky inset-x-0 top-0 z-40 border-b border-transparent bg-background/80 backdrop-blur-xl",
         className
       )}
     >
       <div
         ref={barRef}
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:h-20 lg:px-8"
+        className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[68px] lg:px-8"
       >
         {/* Brand / Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/trademarks/icon.svg" alt="Logo" width={32} height={32} />
-          <span className="flex flex-col leading-none">
-            <span className="text-sm font-semibold tracking-tight sm:text-base">
-              Lucideus
-            </span>
-            <span className="text-[11px] font-medium text-muted-foreground sm:text-xs">
-              Non-Anything
-            </span>
+        <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Image src="/trademarks/icon.svg" alt="Logo" width={28} height={28} />
+          <span className="text-sm font-semibold tracking-tight text-foreground">
+            Lucideus
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-4 lg:flex">
+        {/* Desktop nav - Centered */}
+        <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
           {topNav.map((item) =>
             isMegaItem(item) ? (
               <DesktopMegaTrigger
@@ -120,16 +111,11 @@ export function Navbar({ className }: NavbarProps) {
         </nav>
 
         {/* Right-side CTA + mobile toggle */}
-        <div className="flex items-center gap-2">
-          {/* Theme Toggler - visible on desktop */}
-          <div className="hidden lg:block">
-            <AnimatedThemeToggler variant="ghost" size="icon-sm" />
-          </div>
-
+        <div className="flex shrink-0 items-center gap-2">
           {/* Login - hidden on mobile */}
           <Link
             href="/login"
-            className="hidden rounded-full border border-border/60 bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-sm shadow-black/5 transition hover:border-primary/60 hover:bg-primary/5 sm:inline-flex sm:text-sm"
+            className="hidden rounded-md border border-border/60 bg-background px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm shadow-black/5 transition-colors hover:bg-muted/60 sm:inline-flex"
           >
             Login
           </Link>
@@ -137,20 +123,28 @@ export function Navbar({ className }: NavbarProps) {
           {/* Get Started - hidden on mobile */}
           <Link
             href="/get-started"
-            className="hidden rounded-full border border-primary bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm shadow-black/5 transition hover:bg-primary/90 sm:inline-flex sm:text-sm"
+            className="hidden rounded-md border border-primary bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground shadow-md shadow-primary/20 transition-colors hover:bg-primary/90 sm:inline-flex"
           >
             Get Started
           </Link>
 
           {/* Mobile menu toggle */}
-          <MobileMenuButton
-            isOpen={mobileOpen}
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-md border border-border/60 bg-background/80 p-2 text-foreground shadow-sm shadow-black/10 transition-colors hover:bg-muted/60 lg:hidden"
             onClick={() => setMobileOpen((prev) => !prev)}
-          />
+            aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          >
+            {mobileOpen ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className="size-5" />
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Desktop mega layer */}
+      {/* Desktop mega layer (fixed + centered like Tailark) */}
       <AnimatePresence mode="wait">
         {openMegaItem && (
           <motion.div
@@ -181,9 +175,11 @@ export function Navbar({ className }: NavbarProps) {
             className="fixed inset-x-0 z-50 will-change-transform"
             style={{ top: megaTop }}
             onMouseEnter={() => {
+              // Keep menu open when mouse enters panel
               setOpenMegaId(openMegaItem.id);
             }}
             onMouseLeave={() => {
+              // Close when mouse leaves the panel area
               setOpenMegaId(null);
             }}
           >
@@ -197,7 +193,7 @@ export function Navbar({ className }: NavbarProps) {
         )}
       </AnimatePresence>
 
-      {/* Mobile menu */}
+      {/* Mobile menu: full-height sheet with sticky CTA, collapsible sections */}
       <AnimatePresence mode="wait">
         {mobileOpen && (
           <motion.aside
@@ -224,7 +220,7 @@ export function Navbar({ className }: NavbarProps) {
                     y: SPRING_CONFIGS.gentle,
                   }
             }
-            className="fixed inset-x-0 z-50 border-t border-border/60 bg-background/95 shadow-lg shadow-black/20 backdrop-blur-xl will-change-transform lg:hidden"
+            className="fixed inset-x-0 z-50 border-t border-border/40 bg-background/95 shadow-lg shadow-black/10 backdrop-blur-xl will-change-transform lg:hidden"
             style={{ top: megaTop }}
             role="dialog"
             aria-modal="true"
@@ -253,20 +249,17 @@ export function Navbar({ className }: NavbarProps) {
               </div>
 
               {/* Sticky footer actions */}
-              <div className="shrink-0 border-t border-border/60 bg-background px-4 py-3 sm:px-6">
+              <div className="shrink-0 border-t border-border/40 bg-background px-4 py-3 sm:px-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center">
-                    <AnimatedThemeToggler variant="outline" size="icon" />
-                  </div>
                   <Link
                     href="/login"
-                    className="flex-1 rounded-lg border border-border/60 bg-background px-3 py-2 text-center text-sm font-medium shadow-sm shadow-black/5 transition hover:bg-accent/40"
+                    className="flex-1 rounded-md border border-border/60 bg-background px-3 py-2 text-center text-sm font-medium shadow-sm shadow-black/5 transition-colors hover:bg-muted/60"
                   >
                     Login
                   </Link>
                   <Link
                     href="/get-started"
-                    className="flex-1 rounded-lg border border-primary bg-primary px-3 py-2 text-center text-sm font-medium text-primary-foreground shadow-sm shadow-black/5 transition hover:bg-primary/90"
+                    className="flex-1 rounded-md border border-primary bg-primary px-3 py-2 text-center text-sm font-medium text-primary-foreground shadow-md shadow-primary/20 transition-colors hover:bg-primary/90"
                   >
                     Get Started
                   </Link>
