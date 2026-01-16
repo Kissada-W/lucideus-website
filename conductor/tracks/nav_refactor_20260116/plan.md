@@ -16,7 +16,7 @@
 - [x] Task: Refactor `Navbar.tsx` (Container) [92eee86]
     - [ ] Simplify `src/components/navigation/navbar.tsx` to use the new `NavContainer` and atoms.
     - [ ] Isolate state management (mobile open, mega menu open) into a custom hook `useNavState`.
-- [ ] Task: Refactor Desktop Menu Logic
+- [x] Task: Refactor Desktop Menu Logic [178405c]
     - [ ] Move desktop-specific logic to `src/components/navigation/desktop/DesktopNav.tsx`.
     - [ ] Ensure focus management and keyboard navigation work correctly.
 - [ ] Task: Refactor Mega Menus
