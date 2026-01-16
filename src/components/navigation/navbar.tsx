@@ -12,8 +12,8 @@ import { NavContainer } from "./atoms/NavContainer";
 import { NavSection, TopNavItem, topNav } from "./data";
 import { DesktopNav } from "./desktop/DesktopNav";
 import { useNavState } from "./hooks/useNavState";
-import { MegaPanel } from "./mega-panel";
-import { MobileMegaItem, MobileSimpleItem } from "./mobile-nav";
+import { MegaMenu } from "./desktop/MegaMenu";
+import { MobileNav } from "./mobile/MobileNav";
 import { useReducedMotion } from "./use-reduced-motion";
 
 /* -------------------------------------------------------------------------- */
@@ -31,7 +31,6 @@ export function Navbar({ className }: { className?: string }) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const { openMegaId, setOpenMegaId, mobileOpen, setMobileOpen } = useNavState();
-  const [mobileOpenId, setMobileOpenId] = React.useState<string | null>(null);
 
   // Measure nav height so the fixed mega panel sits exactly under it
   const barRef = React.useRef<HTMLDivElement | null>(null);
@@ -46,11 +45,6 @@ export function Navbar({ className }: { className?: string }) {
     window.addEventListener("resize", compute);
     return () => window.removeEventListener("resize", compute);
   }, []);
-
-  // Reset mobile accordion state on pathname change
-  React.useEffect(() => {
-    setMobileOpenId(null);
-  }, [pathname]);
 
   const openMegaItem = React.useMemo(
     () =>
@@ -150,7 +144,7 @@ export function Navbar({ className }: { className?: string }) {
             }}
           >
             <div className="mx-auto w-[min(100vw-2rem,1120px)]">
-              <MegaPanel
+              <MegaMenu
                 item={openMegaItem}
                 prefersReducedMotion={prefersReducedMotion}
               />
@@ -160,81 +154,13 @@ export function Navbar({ className }: { className?: string }) {
       </AnimatePresence>
 
       {/* Mobile menu: full-height sheet with sticky CTA, collapsible sections */}
-      <AnimatePresence mode="wait">
-        {mobileOpen && (
-          <motion.aside
-            initial={
-              prefersReducedMotion
-                ? { opacity: 1, scale: 1, y: 0 }
-                : { opacity: 0, scale: 0.95, y: -12 }
-            }
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={
-              prefersReducedMotion
-                ? { opacity: 1, scale: 1, y: 0 }
-                : { opacity: 0, scale: 0.98, y: -8 }
-            }
-            transition={
-              prefersReducedMotion
-                ? { duration: 0.01 }
-                : {
-                    opacity: {
-                      duration: DURATIONS.normal,
-                      ease: EASING_CURVES.easeOut,
-                    },
-                    scale: SPRING_CONFIGS.gentle,
-                    y: SPRING_CONFIGS.gentle,
-                  }
-            }
-            className="fixed inset-x-0 z-50 border-t border-nav-border bg-nav-bg/95 shadow-lg shadow-black/10 backdrop-blur-xl will-change-transform lg:hidden"
-            style={{ top: megaTop }}
-            role="dialog"
-            aria-modal="true"
-          >
-            <div className="mx-auto flex h-full w-full max-w-6xl flex-col">
-              <div className="flex-1 overflow-y-auto px-4 pb-4 pt-3 sm:px-6">
-                <div className="space-y-1">
-                  {topNav.map((item) =>
-                    isMegaItem(item) ? (
-                      <MobileMegaItem
-                        key={item.id}
-                        item={item}
-                        pathname={pathname}
-                        openId={mobileOpenId}
-                        setOpenId={setMobileOpenId}
-                      />
-                    ) : (
-                      <MobileSimpleItem
-                        key={item.id}
-                        item={item as Extract<TopNavItem, { type?: "link" }>}
-                        pathname={pathname}
-                      />
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* Sticky footer actions */}
-              <div className="shrink-0 border-t border-nav-border bg-nav-bg px-4 py-3 sm:px-6">
-                <div className="flex items-center gap-3">
-                  <Link
-                    href="/login"
-                    className="flex-1 rounded-md border border-nav-border bg-nav-bg px-3 py-2 text-center text-sm font-medium text-nav-text shadow-sm shadow-black/5 transition-colors hover:bg-nav-hover-bg hover:text-nav-hover-text"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/get-started"
-                    className="flex-1 rounded-md border border-primary bg-primary px-3 py-2 text-center text-sm font-medium text-primary-foreground shadow-md shadow-primary/20 transition-colors hover:bg-primary/90"
-                  >
-                    Get Started
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
+      <MobileNav
+        items={topNav}
+        isOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        topOffset={megaTop}
+        pathname={pathname}
+      />
     </header>
   );
 }
