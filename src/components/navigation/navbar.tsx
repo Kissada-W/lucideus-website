@@ -10,7 +10,7 @@ import { DURATIONS, EASING_CURVES, SPRING_CONFIGS } from "./animation-config";
 import { MobileToggle } from "./atoms/MobileToggle";
 import { NavContainer } from "./atoms/NavContainer";
 import { NavSection, TopNavItem, topNav } from "./data";
-import { DesktopMegaTrigger, DesktopSimpleLink } from "./desktop-nav";
+import { DesktopNav } from "./desktop/DesktopNav";
 import { useNavState } from "./hooks/useNavState";
 import { MegaPanel } from "./mega-panel";
 import { MobileMegaItem, MobileSimpleItem } from "./mobile-nav";
@@ -77,28 +77,12 @@ export function Navbar({ className }: { className?: string }) {
         </Link>
 
         {/* Desktop nav - Centered */}
-        <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
-          {topNav.map((item) =>
-            isMegaItem(item) ? (
-              <DesktopMegaTrigger
-                key={item.id}
-                item={item}
-                isActive={pathname === item.href}
-                onOpen={() => setOpenMegaId(item.id)}
-                onClose={() =>
-                  setOpenMegaId((id) => (id === item.id ? null : id))
-                }
-                isOpen={openMegaId === item.id}
-              />
-            ) : (
-              <DesktopSimpleLink
-                key={item.id}
-                item={item as Extract<TopNavItem, { type?: "link" }>}
-                isActive={pathname === item.href}
-              />
-            )
-          )}
-        </nav>
+        <DesktopNav 
+          items={topNav} 
+          pathname={pathname} 
+          openMegaId={openMegaId} 
+          setOpenMegaId={setOpenMegaId} 
+        />
 
         {/* Right-side CTA + mobile toggle */}
         <div className="flex shrink-0 items-center gap-2">
