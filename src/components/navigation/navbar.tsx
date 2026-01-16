@@ -2,14 +2,16 @@
 
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { DURATIONS, EASING_CURVES, SPRING_CONFIGS } from "./animation-config";
-import { topNav, type NavSection, type TopNavItem } from "./data";
+import { MobileToggle } from "./atoms/MobileToggle";
+import { NavContainer } from "./atoms/NavContainer";
+import { NavSection, TopNavItem, topNav } from "./data";
 import { DesktopMegaTrigger, DesktopSimpleLink } from "./desktop-nav";
+import { useNavState } from "./hooks/useNavState";
 import { MegaPanel } from "./mega-panel";
 import { MobileMegaItem, MobileSimpleItem } from "./mobile-nav";
 import { useReducedMotion } from "./use-reduced-motion";
@@ -18,8 +20,6 @@ import { useReducedMotion } from "./use-reduced-motion";
 /*                                Main Navbar                                 */
 /* -------------------------------------------------------------------------- */
 
-type MainNavProps = { className?: string };
-
 /** Detect menu items that have sections (mega/rich menus). */
 function isMegaItem(
   item: TopNavItem
@@ -27,15 +27,10 @@ function isMegaItem(
   return "sections" in item;
 }
 
-export function Navbar({ className }: MainNavProps) {
+export function Navbar({ className }: { className?: string }) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
-
-  // Desktop state
-  const [openMegaId, setOpenMegaId] = React.useState<string | null>(null);
-
-  // Mobile state
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { openMegaId, setOpenMegaId, mobileOpen, setMobileOpen } = useNavState();
   const [mobileOpenId, setMobileOpenId] = React.useState<string | null>(null);
 
   // Measure nav height so the fixed mega panel sits exactly under it
@@ -52,10 +47,8 @@ export function Navbar({ className }: MainNavProps) {
     return () => window.removeEventListener("resize", compute);
   }, []);
 
-  // Close any open menus on route change
+  // Reset mobile accordion state on pathname change
   React.useEffect(() => {
-    setOpenMegaId(null);
-    setMobileOpen(false);
     setMobileOpenId(null);
   }, [pathname]);
 
@@ -70,14 +63,11 @@ export function Navbar({ className }: MainNavProps) {
   return (
     <header
       className={cn(
-        "sticky inset-x-0 top-0 z-40 border-b border-transparent bg-background/80 backdrop-blur-xl",
+        "sticky inset-x-0 top-0 z-40 border-b border-nav-border bg-nav-bg/80 backdrop-blur-xl transition-colors",
         className
       )}
     >
-      <div
-        ref={barRef}
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[68px] lg:px-8"
-      >
+      <NavContainer ref={barRef}>
         {/* Brand / Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image src="/trademarks/icon.svg" alt="Logo" width={28} height={28} />
@@ -115,7 +105,7 @@ export function Navbar({ className }: MainNavProps) {
           {/* Login - hidden on mobile */}
           <Link
             href="/login"
-            className="hidden rounded-md border border-border/60 bg-background px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm shadow-black/5 transition-colors hover:bg-muted/60 sm:inline-flex"
+            className="hidden rounded-md border border-nav-border bg-nav-bg px-3.5 py-1.5 text-sm font-medium text-nav-text shadow-sm shadow-black/5 transition-colors hover:bg-nav-hover-bg hover:text-nav-hover-text sm:inline-flex"
           >
             Login
           </Link>
@@ -129,20 +119,12 @@ export function Navbar({ className }: MainNavProps) {
           </Link>
 
           {/* Mobile menu toggle */}
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md border border-border/60 bg-background/80 p-2 text-foreground shadow-sm shadow-black/10 transition-colors hover:bg-muted/60 lg:hidden"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-          >
-            {mobileOpen ? (
-              <X className="size-5" />
-            ) : (
-              <Menu className="size-5" />
-            )}
-          </button>
+          <MobileToggle 
+            isOpen={mobileOpen} 
+            onToggle={() => setMobileOpen(!mobileOpen)} 
+          />
         </div>
-      </div>
+      </NavContainer>
 
       {/* Desktop mega layer (fixed + centered like Tailark) */}
       <AnimatePresence mode="wait">
@@ -220,7 +202,7 @@ export function Navbar({ className }: MainNavProps) {
                     y: SPRING_CONFIGS.gentle,
                   }
             }
-            className="fixed inset-x-0 z-50 border-t border-border/40 bg-background/95 shadow-lg shadow-black/10 backdrop-blur-xl will-change-transform lg:hidden"
+            className="fixed inset-x-0 z-50 border-t border-nav-border bg-nav-bg/95 shadow-lg shadow-black/10 backdrop-blur-xl will-change-transform lg:hidden"
             style={{ top: megaTop }}
             role="dialog"
             aria-modal="true"
@@ -249,11 +231,11 @@ export function Navbar({ className }: MainNavProps) {
               </div>
 
               {/* Sticky footer actions */}
-              <div className="shrink-0 border-t border-border/40 bg-background px-4 py-3 sm:px-6">
+              <div className="shrink-0 border-t border-nav-border bg-nav-bg px-4 py-3 sm:px-6">
                 <div className="flex items-center gap-3">
                   <Link
                     href="/login"
-                    className="flex-1 rounded-md border border-border/60 bg-background px-3 py-2 text-center text-sm font-medium shadow-sm shadow-black/5 transition-colors hover:bg-muted/60"
+                    className="flex-1 rounded-md border border-nav-border bg-nav-bg px-3 py-2 text-center text-sm font-medium text-nav-text shadow-sm shadow-black/5 transition-colors hover:bg-nav-hover-bg hover:text-nav-hover-text"
                   >
                     Login
                   </Link>
