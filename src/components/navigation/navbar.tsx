@@ -15,6 +15,7 @@ import { useNavState } from "./hooks/useNavState";
 import { MegaMenu } from "./desktop/MegaMenu";
 import { MobileNav } from "./mobile/MobileNav";
 import { useReducedMotion } from "./use-reduced-motion";
+import { AnimatedThemeToggler } from "../common/animated-theme-toggler";
 
 /* -------------------------------------------------------------------------- */
 /*                                Main Navbar                                 */
@@ -80,6 +81,7 @@ export function Navbar({ className }: { className?: string }) {
 
         {/* Right-side CTA + mobile toggle */}
         <div className="flex shrink-0 items-center gap-2">
+          <AnimatedThemeToggler />
           {/* Login - hidden on mobile */}
           <Link
             href="/login"
